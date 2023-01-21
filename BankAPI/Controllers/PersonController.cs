@@ -10,50 +10,48 @@ namespace BankAPI.Controllers
     public class PersonController : ControllerBase
     {
         private readonly ILogger<Person> _logger;
-        private List<Person> People { get; set; }
 
         public PersonController(ILogger<Person> logger)
         {
             _logger = logger;
-            People = new List<Person>();
         }
 
         [HttpGet]
         public Person? Get(int? id)
         {
+            List<Person>? people;
             using (FileStream fs = new FileStream("people.json", FileMode.OpenOrCreate))
             {
-                People = JsonSerializer.Deserialize<List<Person>>(fs) ?? People;
+                people = JsonSerializer.Deserialize<List<Person>>(fs) ?? new List<Person>();
             }
-            _logger.LogInformation(People.Count.ToString());
-            return People.FirstOrDefault(p => p.Id == id);
+            return people.FirstOrDefault(p => p.Id == id);
         }
 
         [HttpGet("GetAll")]
         public List<Person> GetAll()
         {
+            List<Person>? people;
             using (FileStream fs = new FileStream("people.json", FileMode.OpenOrCreate))
             {
-                People = JsonSerializer.Deserialize<List<Person>>(fs) ?? People;
+                people = JsonSerializer.Deserialize<List<Person>>(fs) ?? new List<Person>();
             }
-            _logger.LogInformation(People.Count.ToString());
-            return People;
+            return people;
         }
 
         [HttpPost]
         public Person Post(string? firstname, string? lastname)
         {
+            List<Person>? people;
             using (FileStream fs = new FileStream("people.json", FileMode.OpenOrCreate))
             {
-                People = JsonSerializer.Deserialize<List<Person>>(fs) ?? People;
+                people = JsonSerializer.Deserialize<List<Person>>(fs) ?? new List<Person>();
             }
-            People.Add(new Person { Id = People.Count + 1, Firstname = firstname, Lastname = lastname });
-            _logger.LogInformation(People.Count.ToString());
+            people.Add(new Person { Id = Utils.GetRandomId(people), Firstname = firstname, Lastname = lastname });
             using (FileStream fs = new FileStream("people.json", FileMode.OpenOrCreate))
             {
-                JsonSerializer.Serialize<List<Person>>(fs, People);
+                JsonSerializer.Serialize(fs, people);
             }
-            return People.Last();
+            return people.Last();
         }
     }
 }

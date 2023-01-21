@@ -1,6 +1,6 @@
 ﻿namespace BankAPI
 {
-    public class Person
+    public class Person : IIdentify
     {
         public int Id { get; set; }
         public string? Firstname { get; set; }
