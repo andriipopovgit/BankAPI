@@ -47,7 +47,7 @@ namespace BankAPI.Controllers
                 people = JsonSerializer.Deserialize<List<Person>>(fs) ?? new List<Person>();
             }
             people.Add(new Person { Id = Utils.GetRandomId(people), Firstname = firstname, Lastname = lastname });
-            using (FileStream fs = new FileStream("people.json", FileMode.OpenOrCreate))
+            using (FileStream fs = new FileStream("people.json", FileMode.Create))
             {
                 JsonSerializer.Serialize(fs, people);
             }

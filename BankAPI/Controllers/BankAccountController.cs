@@ -36,18 +36,18 @@ namespace BankAPI.Controllers
                 bankAccounts = JsonSerializer.Deserialize<List<BankAccount>>(fs);
             }
             bankAccounts.Add(new BankAccount { Id = Utils.GetRandomId(bankAccounts), PersonId = personId, Sum = 0 });
-            using (FileStream fs = new FileStream("bankAccount.json", FileMode.Open))
+            using (FileStream fs = new FileStream("bankAccount.json", FileMode.Create))
             {
                 JsonSerializer.Serialize<List<BankAccount>>(fs, bankAccounts);
             }
             return bankAccounts.Last();
             //test
         }
-        [HttpPost]
-        public BankAccount? MyPutSum(int id, decimal sum)
+        [HttpPost("PutMoney")]
+        public BankAccount? PutMoney(int id, decimal sum)
         {
             List<BankAccount>? bank;
-            using (FileStream fs = new FileStream("bankaccount.json", FileMode.Open))
+            using (FileStream fs = new FileStream("bankAccount.json", FileMode.Open))
             {
                 bank = JsonSerializer.Deserialize<List<BankAccount>>(fs);
             }
@@ -57,11 +57,45 @@ namespace BankAPI.Controllers
             {
                 bankAcc.Sum += sum;
             }
-            using (FileStream fs = new FileStream("bankaccount.json", FileMode.Open))
+            using (FileStream fs = new FileStream("bankAccount.json", FileMode.Create))
             {
                 JsonSerializer.Serialize<List<BankAccount>>(fs, bank);
             }
             return bankAcc;
+        }
+        [HttpGet("GetAll")]
+        public List<BankAccount>? GetAll()
+        {
+            List<BankAccount>? bankAccounts = null;
+            using (FileStream fs = new FileStream("bankAccount.json", FileMode.Open))
+            {
+                bankAccounts = JsonSerializer.Deserialize<List<BankAccount>>(fs);
+            }
+            return bankAccounts;
+        }
+        [HttpPost("GetMoney")]
+        public bool GetMoney(int id, decimal sum)
+        {
+            List<BankAccount>? bankAccounts = null;
+            using (FileStream fs = new FileStream("bankAccount.json", FileMode.Open))
+            {
+                bankAccounts = JsonSerializer.Deserialize<List<BankAccount>>(fs);
+            }
+            BankAccount? tempaccount;
+            tempaccount = bankAccounts.FirstOrDefault(ba => ba.Id == id);
+            if (tempaccount != null)
+            {
+                if (tempaccount.Sum >= sum)
+                {
+                    tempaccount.Sum -= sum;
+                    using (FileStream fs = new FileStream("bankAccount.json", FileMode.Create))
+                    {
+                        JsonSerializer.Serialize<List<BankAccount>>(fs, bankAccounts);
+                    }
+                    return true;
+                }
+            }
+            return false;
         }
     }
 
