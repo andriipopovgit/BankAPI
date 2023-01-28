@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace BankAPI.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class PersonController : ControllerBase
     {
@@ -53,5 +53,6 @@ namespace BankAPI.Controllers
             }
             return people.Last();
         }
+
     }
 }
