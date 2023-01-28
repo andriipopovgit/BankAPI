@@ -41,6 +41,7 @@ namespace BankAPI.Controllers
                 JsonSerializer.Serialize<List<BankAccount>>(fs, bankAccounts);
             }
             return bankAccounts.Last();
+            //test
         }
         [HttpPost]
         public BankAccount? MyPutSum(int id, decimal sum)
