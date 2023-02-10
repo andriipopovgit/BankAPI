@@ -36,7 +36,7 @@ namespace BankAPI.Controllers
         public Person Post(string? firstname, string? lastname)
         {
             List<Person>? people = db.People?.ToList();
-            Person person = new Person{ Id = Utils.GetRandomId(people), Firstname = firstname, Lastname = lastname };
+            Person person = new Person{Firstname = firstname, Lastname = lastname };
             db.People?.Add(person);
             db.SaveChanges();
             return person;

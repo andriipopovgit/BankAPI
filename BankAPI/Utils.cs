@@ -1,19 +1,19 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
 
 namespace BankAPI
 {
     public class Utils
     {
-        public static int GetRandomId<T>(List<T> items) where T : IIdentify
+        public static string GetRandomCardNumber()
         {
             Random random = new Random();
-            int id;
-            do
+            StringBuilder number = new StringBuilder("5");
+            for (int i = 0; i < 15; i++)
             {
-                id = random.Next();
-                if (items.All(item => item.Id != id))
-                    return id;
-            } while (true);
+                number.Append(random.Next(0, 10));
+            }
+            return number.ToString();
         }
     }
 }
